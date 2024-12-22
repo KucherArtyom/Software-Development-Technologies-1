@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Футболикс - Клуб</title>
+    <link rel="stylesheet" href="club.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Футболикс</h1>
+        <nav class="nav">
+            <form action="/index.html">
+                <button class="nav-button">На главную</button>
+            </form>
+            <form action="/index.html">
+                <button class="nav-button">Назад</button>
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        <section class="club-logo">
+            <div class="logo">
+                <img src="\Pictures\barca.png" alt="Логотип Барселоны">
+            </div>
+        </section>
+
+        <section class="club-info">
+            <div class="details">
+                <h2>Барселона</h2>
+                <p>Барселона, Испания</p>
+                <p>Технический спонсор: Nike</p>
+                <p>Титульный спонсор: Spotify</p>
+                <p>Клубные цвета: <span class="color red"></span> <span class="color blue"></span></p>
+            </div>
+        </section>
+
+        <section class="stadium">
+            <h3>Стадион "Camp Nou"</h3>
+            <div class="stadium-slider">
+                <!--<button class="arrow left">&lt;</button>-->
+                <img src="\Pictures\camp_nou(1).png" alt="Стадион Camp Nou" class="centered-image">
+                <!--<button class="arrow right">&gt;</button>-->
+            </div>
+            <p id="stadium-capacity" class="centered-text">Вместимость: x</p>
+        </section>
+
+        <section class="trophies">
+            <h3>Трофеи</h3>
+            <ul>
+                <li>Лига Чемпионов: 5</li>
+                <li>Чемпионат Испании: 27</li>
+                <li>Кубок Испании: 31</li>
+                <li>Суперкубок Испании: 14</li>
+                <li>Суперкубок УЕФА: 5</li>
+                <li>Клубный чемпионат мира: 3</li>
+                <li>Кубок обладателей кубков: 4</li>
+                <li>Кубок ярмарок: 3</li>
+            </ul>
+        </section>
+
+        <section class="players">
+            <h3>Текущий состав</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Игровой номер</th>
+                        <th>Игрок (ФИО)</th>
+                        <th>Позиция</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>7</td>
+                        <td>Роберт Левандовски</td>
+                        <td>Нападающий</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>Дани Ольмо</td>
+                        <td>Полузащитник</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>Андреас Кристенсен</td>
+                        <td>Защитник</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Марк-Андре тер Штеген</td>
+                        <td>Вратарь</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="coach">
+            <h3>Главный тренер</h3>
+            <div class="coach-info">
+                <img src="\Pictures\hansi_flick(1).png" alt="Ханси Флик" class="centered-image">
+                <p class="centered-text">Ханси Флик</p>
+            </div>
+        </section>
+
+        <section class="team-stats">
+            <h3>Статистика команды</h3>
+            <p id="team-value">Общая стоимость состава: 945 млн. €</p>
+            <p id="player-count">Количество игроков в команде: x</p>
+            <p id="average-age">Средний возраст команды: x года</p>
+            <p id="foreigner-count">Количество иностранцев: x</p>
+            <p id="national-team-player-count">Количество игроков национальных сборных: x</p>
+            <p>Текущий трансферный баланс: -19,40 млн €</p>
+            <p>Лучший бомбардир: Роберт Левандовски - 16 голов</p>
+            <p>Лучший ассистент: Ламин Ямал - 10 передач</p>
+            <p>Схема команды: 4-2-3-1</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Футболикс - здесь вы найдёте всё о футболе</p>
+        <div class="links">
+            <a href="#">Про нас</a>
+            <a href="#">Реклама</a>
+        </div>
+        <div class="social">
+            <a href="#"><img src="\Pictures\instagram1.png" alt="Instagram"></a>
+            <a href="#"><img src="\Pictures\facebook1.png" alt="Facebook"></a>
+            <a href="#"><img src="\Pictures\youtube1.png" alt="YouTube"></a>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js"></script>
+<script>
+function updateClubInfo(data) {
+    document.getElementById('stadium-capacity').textContent = `Вместимость: ${data.stadium_seats}`;
+    document.getElementById('player-count').textContent = `Количество игроков в команде: ${data.squad_size}`;
+    document.getElementById('average-age').textContent = `Средний возраст команды: ${data.average_age} лет`;
+    document.getElementById('foreigner-count').textContent = `Количество иностранцев: ${data.foreigners_number}`;
+    document.getElementById('national-team-player-count').textContent = `Количество игроков национальных сборных: ${data.national_team_players}`;
+}
+
+async function fetchClubData() {
+    try {
+        const response = await axios.get('/api/data');
+        const clubData = response.data[0]; // Предполагается, что возвращается массив с одним объектом
+        updateClubInfo(clubData);
+    } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+    }
+}
+
+window.onload = fetchClubData;
+</script>
+</body>
+</html>
